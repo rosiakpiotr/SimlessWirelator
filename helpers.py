@@ -1,12 +1,12 @@
 import csv
 from entities import *
 
-def read_equipment_csv(filename: str):
-    type_mapping = {
-        'UE': UserEquipment,
-        'C': CircularAntenna,
-        'Y': YagiAntenna,
-        'R': RectangularObstacle
+def read_equipment_csv(filename: str) -> tuple[list[Entity], list[Entity]]:
+    loader_f_mapping = {
+        'UE': create_user_equipment,
+        'C': create_circular_antenna,
+        'Y': create_yagi_antenna,
+        'R': create_rectangular_obstacle
     }
     equipment, obstacles = [], []
     with open(filename) as f:
@@ -18,20 +18,20 @@ def read_equipment_csv(filename: str):
                     row = np.float_(row[1:])
                     location = row[0:2]
                     ue_params = row[2:]
-                    equipment.append(type_mapping[kind](
+                    equipment.append(loader_f_mapping[kind](
                         location, *list(ue_params)))
                 case 'A':
                     antenna_type = row[1]
                     row = np.float_(row[2:])
                     location = row[0:2]
                     antenna_params = row[2:]
-                    equipment.append(type_mapping[antenna_type](
+                    equipment.append(loader_f_mapping[antenna_type](
                         location, *list(antenna_params)))
                 case 'O':
                     obstacle_type = row[1]
                     row = np.float_(row[2:])
                     center=row[0:2]
-                    obstacles.append(type_mapping[obstacle_type](
+                    obstacles.append(loader_f_mapping[obstacle_type](
                         tuple(center), *list(row[2:])
                     ))
                     
@@ -90,3 +90,26 @@ def shortest_path_in_polygon(polygon, start, end):
 def is_visible(p1, p2, polygon):
     line = LineString([p1, p2])
     return polygon.contains(line) or polygon.touches(line)
+
+
+def create_directional_graph(equipment, pts, polygons):
+    def is_point_inside_shape(shape: Polygon, test_point: Point):
+        return shape.contains(test_point)
+    
+    G = nx.DiGraph()
+
+    # Add nodes
+    for antenna in equipment:
+        G.add_node(antenna, pos=antenna.center)
+
+    # Add edges with weights (distances)
+    for i,start in enumerate(equipment):
+        sx,sy=pts[i]
+        for j,end in enumerate(equipment):
+            if start != end and is_point_inside_shape(sx,sy,end.center):
+                # print(start, end)
+                distance = shortest_path_in_polygon(polygons[i], start.center, end.center)[0]
+                # print("Adding edge from",start,"to",end,"distance",distance)
+                G.add_edge(start, end, weight=distance)
+
+    return G

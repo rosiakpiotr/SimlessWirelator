@@ -1,0 +1,3 @@
+*.pyc
+# Jupyter notebook where I tested the code
+tests.ipynb

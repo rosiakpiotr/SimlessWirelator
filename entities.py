@@ -17,7 +17,7 @@ class UserEquipment(Equipment):
         self.__compute_outline()
 
     def __compute_outline(self):
-        theta = np.linspace(0, 2*np.pi, 360*1)
+        theta = np.linspace(0, 2*np.pi, int(360*0.2))
         xs = self.__radiation_diameter*0.5*np.sin(theta)
         ys = self.__radiation_diameter*0.5*np.cos(theta)
         self.__outline = (xs, ys)
@@ -37,7 +37,7 @@ class CircularAntenna(Equipment):
         self.__compute_outline()
 
     def __compute_outline(self):
-        theta = np.linspace(0, 2*np.pi, 360*2)
+        theta = np.linspace(0, 2*np.pi, int(360*0.2))
         xs = self.__radiation_diameter*0.5*np.sin(theta)
         ys = self.__radiation_diameter*0.5*np.cos(theta)
         self.__outline = (xs, ys)
@@ -61,7 +61,7 @@ class YagiAntenna(Equipment):
         length = self.length*0.5
         width = self.width*0.5
         tilt_angle = np.deg2rad(-self.tilt+90)
-        theta = np.linspace(0, 2*np.pi, 360*2)
+        theta = np.linspace(0, 2*np.pi, int(360*0.5))
         xs = np.sin(tilt_angle)*width + length*np.cos(theta)*np.cos(tilt_angle) - width*np.sin(theta)*np.sin(tilt_angle)
         ys = -width*np.cos(tilt_angle) + length*np.cos(theta)*np.sin(tilt_angle) + width*np.sin(theta)*np.cos(tilt_angle)
         self.__outline = (xs,ys)

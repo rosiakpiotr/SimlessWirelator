@@ -1,9 +1,12 @@
+import logging
+
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
 from configuration import Configuration
 from simentry import run_through_configuration
 
+logger = logging.getLogger(__name__)
 
 class WirelessReachabilitySimApp:
     def __init__(self, root):
@@ -56,15 +59,19 @@ class WirelessReachabilitySimApp:
         )
         self.to_spinbox.pack(pady=5)
 
+        logger.info("UI Inflated")
+
         self.config = Configuration()
 
     def add_spinboxes(self, from_, to_):
+        logger.info("Spinboxes added with ranges: %d to %d", from_, to_)
         self.from_spinbox.config(from_=from_, to=to_)
         self.to_spinbox.config(from_=from_, to=to_)
         self.from_spinbox.config(state=tk.NORMAL)
         self.to_spinbox.config(state=tk.NORMAL)
 
     def populate_listbox(self, items):
+        logging.info("Populating Listbox with items: %s", items)
         self.add_spinboxes(1, len(items))
         for i, item in enumerate(items):
             self.listbox.insert(tk.END, f"{i+1}. {item}")
@@ -79,6 +86,7 @@ class WirelessReachabilitySimApp:
             self.config_name.set(config_file_path.split("/")[-1])
             try:
                 self.config.load(config_file_path)
+                logging.info("Config file loaded: %s", config_file_path)
                 # Populate Listbox with example items
                 self.populate_listbox(self.config.equipment)
                 self.run_button.config(state=tk.NORMAL)
@@ -93,6 +101,7 @@ class WirelessReachabilitySimApp:
             messagebox.showwarning(
                 "Warning", "Please load a config file before running the simulation."
             )
+            logging.warn("Simulation run attempted with no config file loaded")
         else:
             # messagebox.showinfo("Info", f"Running simulation with config file: {config_file}")
             from_, to_ = (

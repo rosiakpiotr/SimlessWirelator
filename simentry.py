@@ -5,7 +5,7 @@ import helpers
 from configuration import Configuration
 
 
-def run_through_configuration(conf: Configuration):
+def run_through_configuration(conf: Configuration, from_: int, to_: int):
     equipment, obstacles = conf.equipment.copy(), conf.obstacles.copy()
     obstacle_casting.apply_obstacles(equipment, obstacles)
     plotting.plot_map(equipment, obstacles, "Map")
@@ -28,14 +28,16 @@ def run_through_configuration(conf: Configuration):
 
     try:
         dst, path = helpers.nx.single_source_dijkstra(
-            G, source=equipment[0], target=equipment[1]
+            G, source=equipment[from_], target=equipment[to_]
         )
 
         print(f"Path found (distance={dst}), plotting.")
         plotting.plot_path(equipment, obstacles, path)
         plt.tight_layout()
-    except helpers.nx.NetworkXNoPath as e:
-        print("No path found.")
+    except helpers.nx.NetworkXNoPath:
+        print("No path found, plotting.")
+        plotting.plot_path(equipment, obstacles, [])
+        plt.tight_layout()
 
     print("Finishing...")
     plt.show()

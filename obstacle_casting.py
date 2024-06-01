@@ -27,4 +27,4 @@ def apply_obstacles(equipment: list[Entity], obstacles: list[Entity]):
         x, y = eq.polygon.exterior.coords.xy
         for obstacle in obstacles:
             cast_points_to_shape(x, y, eq.source_point, obstacle.polygon)
-        equipment[i] = Entity(eq.source_point.xy, x, y, eq.entity_type)
+        equipment[i] = Entity(eq.id_, eq.source_point.xy, x, y, eq.entity_type)

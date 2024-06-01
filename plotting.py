@@ -17,12 +17,13 @@ def plot_eq_obs(equipment, obstacles, selected_eqs=None):
         shapely.plotting.plot_polygon(
             o.polygon, picker=True, add_points=False, facecolor='red')
 
-    marker_mapping = {
-        EntityType.YAGI_ANTENNA: '*',
-        EntityType.CIRCULAR_ANTENNA: '*',
-        EntityType.USER: '$UE$'
-    }
+    
     for eq in equipment:
+        marker_mapping = {
+            EntityType.YAGI_ANTENNA: f'*${eq.id_}$',
+            EntityType.CIRCULAR_ANTENNA: f'*${eq.id_}$',
+            EntityType.USER: f'$U{eq.id_}$'
+        }
         shapely.plotting.plot_points(
             eq.source_point, marker=marker_mapping[eq.entity_type], color='yellow', markersize=10)
         
@@ -38,7 +39,7 @@ def plot_map(equipment, obstacles, title: str, selected_eqs=None):
     
 def plot_path(equipment, obstacles, path):
     plt.figure()
-    plot_map(equipment, obstacles, title='Path found!', selected_eqs=path)
+    plot_map(equipment, obstacles, title='Path results', selected_eqs=path)
     carr = [eq.source_point for eq in path]
     plot_arrows_between_points(carr)
     plt.gcf().set_size_inches(8, 8)

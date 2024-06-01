@@ -37,7 +37,9 @@ def calculate_path_length(path):
 
 
 def shortest_path_in_polygon(polygon, start, end):
+    print("Shortest path in polygon")
     triangles = cdt_triangulate(polygon)
+    print("Triangulated polygon", polygon)
     G = create_graph_from_triangulation(triangles)
     G.add_node(tuple(start))
     G.add_node(tuple(end))
@@ -72,10 +74,13 @@ def create_directional_graph(equipment):
     for eqA in equipment:
         for eqB in equipment:
             if eqA != eqB and eqA.polygon.contains(eqB.source_point):
+                print("Checking edge from", eqA, "to", eqB)
                 distance = shortest_path_in_polygon(
                     eqA.polygon, 
                     eqA.source_point.coords[0], 
                     eqB.source_point.coords[0])[0]
                 G.add_edge(eqA, eqB, weight=distance)
+                print("Added edge from", eqA, "to", eqB, "with distance", distance)
 
+    print("Graph created")
     return G

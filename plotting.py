@@ -15,7 +15,7 @@ def plot_map(equipment, obstacles, selected_eqs=None):
 
     for o in obstacles:
         shapely.plotting.plot_polygon(
-            o.polygon, add_points=False, facecolor='red')
+            o.polygon, picker=True, add_points=False, facecolor='red')
 
     marker_mapping = {
         EntityType.YAGI_ANTENNA: '*',
@@ -28,7 +28,6 @@ def plot_map(equipment, obstacles, selected_eqs=None):
 
     plt.grid(False)
     plt.tight_layout()
-
 
 def plot_graph(G):
     # Plotting directional graph

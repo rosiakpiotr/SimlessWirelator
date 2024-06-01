@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 
-def plot_map(equipment, obstacles, selected_eqs=None):
+def plot_eq_obs(equipment, obstacles, selected_eqs=None):
     if selected_eqs is None:
         selected_eqs = equipment
 
@@ -25,14 +25,45 @@ def plot_map(equipment, obstacles, selected_eqs=None):
     for eq in equipment:
         shapely.plotting.plot_points(
             eq.source_point, marker=marker_mapping[eq.entity_type], color='yellow', markersize=10)
+        
 
+def plot_map(equipment, obstacles, title: str, selected_eqs=None):
+    # plt.figure()
+    plot_eq_obs(equipment, obstacles, selected_eqs)
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.gcf().set_size_inches(8, 8)
     plt.grid(False)
-    plt.tight_layout()
+    plt.suptitle(title)
 
-def plot_graph(G):
+    
+def plot_path(equipment, obstacles, path):
+    plt.figure()
+    plot_map(equipment, obstacles, title='Path found!', selected_eqs=path)
+    carr = [eq.source_point for eq in path]
+    plot_arrows_between_points(carr)
+    plt.gcf().set_size_inches(8, 8)
+    plt.title('->'.join([str(eq) for eq in path]), fontsize=6)
+    plt.grid(False)
+
+def plot_dijkstra_graph(G):
     # Plotting directional graph
     pos = nx.get_node_attributes(G, 'pos')
     nx.draw(G, pos, with_labels=True, node_size=700, node_color='skyblue')
     labels = nx.get_edge_attributes(G, 'weight')
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
-    plt.show()
+
+def plot_arrows_between_points(carr):
+    # Plot arrows between points
+    for i in range(len(carr) - 1):
+        x1, y1 = carr[i].coords[0]
+        x2, y2 = carr[i + 1].coords[0]
+        plt.arrow(
+            x1,
+            y1,
+            (x2 - x1),
+            (y2 - y1),
+            head_width=0.1,
+            head_length=0.1,
+            fc="r",
+            ec="r",
+        )

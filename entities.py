@@ -31,7 +31,7 @@ class Entity(object):
         return self._entity_type
     
     def __repr__(self):
-        return f"{self.entity_type} at {self.source_point}"
+        return f"{self.entity_type.name}{self.source_point.coords[0]}"
 
 
 def create_circular(center, radiation_diameter):

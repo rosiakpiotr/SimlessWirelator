@@ -1,17 +1,13 @@
 from math import sqrt
 import networkx as nx
+import numpy as np
 from shapely.geometry import Polygon, Point, LineString
-import triangle
+import shapely.ops
 
 
 def cdt_triangulate(polygon):
-    coords = list(polygon.exterior.coords)
-    segments = [(i, (i+1) % len(coords)) for i in range(len(coords)-1)]
-    A = {'vertices': coords, 'segments': segments}
-    B = triangle.triangulate(A, 'p')
-    triangles = [Polygon(B['vertices'][triangle])
-                 for triangle in B['triangles']]
-    return triangles
+    triangulated = np.array(shapely.ops.triangulate(polygon))
+    return triangulated[polygon.contains(triangulated)]
 
 
 def create_graph_from_triangulation(triangles):

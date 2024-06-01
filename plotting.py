@@ -43,7 +43,10 @@ def plot_path(equipment, obstacles, path):
     carr = [eq.source_point for eq in path]
     plot_arrows_between_points(carr)
     plt.gcf().set_size_inches(8, 8)
-    plt.title('->'.join([str(eq) for eq in path]), fontsize=6)
+    if len(path) == 0:
+        plt.title('No path found')
+    else:
+        plt.title('->'.join([str(eq) for eq in path]), fontsize=6)
     plt.grid(False)
 
 def plot_dijkstra_graph(G):

@@ -76,6 +76,12 @@ class WirelessReachabilitySimApp:
         for i, item in enumerate(items):
             self.listbox.insert(tk.END, f"{i+1}. {item}")
 
+    def clear_listbox(self):
+        logging.info("Clearing Listbox")
+        self.listbox.delete(0, tk.END)
+        self.from_spinbox.config(state=tk.DISABLED)
+        self.to_spinbox.config(state=tk.DISABLED)
+
     def load_config(self):
         config_file_path = filedialog.askopenfilename(
             initialdir=".",
@@ -87,7 +93,7 @@ class WirelessReachabilitySimApp:
             try:
                 self.config.load(config_file_path)
                 logging.info("Config file loaded: %s", config_file_path)
-                # Populate Listbox with example items
+                self.clear_listbox()
                 self.populate_listbox(self.config.equipment)
                 self.run_button.config(state=tk.NORMAL)
             except Exception as e:

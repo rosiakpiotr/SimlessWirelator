@@ -9,6 +9,7 @@ from configuration import Configuration
 logger = logging.getLogger(__name__)
 
 def run_through_configuration(conf: Configuration, from_: int, to_: int):
+    plt.close("all")
     logger.info("Starting simulation...")
     equipment, obstacles = conf.equipment.copy(), conf.obstacles.copy()
     logger.info("Restricting equipment areas according to obstacles...")

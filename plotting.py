@@ -37,7 +37,7 @@ def plot_map(equipment, obstacles, title: str, selected_eqs=None):
     plt.suptitle(title)
 
     
-def plot_path(equipment, obstacles, path):
+def plot_path(equipment, obstacles, path, path_stringified=None):
     plt.figure()
     plot_map(equipment, obstacles, title='Path results', selected_eqs=path)
     carr = [eq.source_point for eq in path]
@@ -46,7 +46,7 @@ def plot_path(equipment, obstacles, path):
     if len(path) == 0:
         plt.title('No path found')
     else:
-        plt.title('->'.join([str(eq) for eq in path]), fontsize=6)
+        plt.title(path_stringified, fontsize=6)
     plt.grid(False)
 
 def plot_dijkstra_graph(G):

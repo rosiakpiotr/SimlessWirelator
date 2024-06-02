@@ -71,7 +71,7 @@ class WirelessReachabilitySimApp:
         self.to_spinbox.config(state=tk.NORMAL)
 
     def populate_listbox(self, items):
-        logging.info("Populating Listbox with items: %s", items)
+        logging.info("Populating Listbox with items: %s", [f'{i+1}. {item}' for i, item in enumerate(items)])
         self.add_spinboxes(1, len(items))
         for i, item in enumerate(items):
             self.listbox.insert(tk.END, f"{i+1}. {item}")
